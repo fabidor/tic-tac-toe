@@ -1,0 +1,12 @@
+.boxBoard{
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+    gap: 10px;
+}
+
+.box{
+    background-color: lightgray;
+    width: 100px;
+    height: 100px;
+}
