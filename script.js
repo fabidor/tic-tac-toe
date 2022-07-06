@@ -12,7 +12,34 @@ const GameBoard = (() => {
         let fillBox = document.getElementById(index)
         fillBox.textContent=symbol;
     }
-    return {populateBoard, updateBoard};
+    const checkForWin = symbol => {
+        if(gameBoard[0] == symbol && gameBoard[1] == symbol && gameBoard[2] == symbol){
+            return "Win";
+        } else if(gameBoard[3] == symbol && gameBoard[4] == symbol && gameBoard[5] == symbol){
+            return "Win";
+        } else if(gameBoard[6] == symbol && gameBoard[7] == symbol && gameBoard[8] == symbol){
+            return "Win";
+        } else if(gameBoard[0] == symbol && gameBoard[3] == symbol && gameBoard[6] == symbol){
+            return "Win";
+        } else if(gameBoard[1] == symbol && gameBoard[4] == symbol && gameBoard[7] == symbol){
+            return "Win";
+        } else if(gameBoard[2] == symbol && gameBoard[5] == symbol && gameBoard[8] == symbol){
+            return "Win";
+        } else if(gameBoard[0] == symbol && gameBoard[4] == symbol && gameBoard[8] == symbol){
+            return "Win";
+        } else if(gameBoard[2] == symbol && gameBoard[4] == symbol && gameBoard[6] == symbol){
+            return "Win";
+        } else {
+            for(let i = 0; i<gameBoard.length; i++){
+                if ((gameBoard[i] != "X" && gameBoard[i] != 'O') || gameBoard.length != 9){
+                    return "Continue";
+                }
+            }
+            return "Tie";
+        }
+    }
+
+    return {populateBoard, updateBoard, checkForWin};
 })();
 
 const Player = s => {
@@ -33,9 +60,18 @@ const PerformTurn = (() => {
         }
     }
     const updateGame = (index) => {
+        if(gameBoard[index] == 'X' || gameBoard[index] == 'O'){
+            console.log("NO");
+            return;
+        } else{
         GameBoard.updateBoard(turn, index);
+        let gameStatus = GameBoard.checkForWin(turn);
+        if(gameStatus == "Win"){
+            alert(`${turn} Wins!`);
+        }
         turn = updateTurn(turn);
-        console.log(gameBoard);
+        
+        }
     };
     return {updateGame};
 })();
