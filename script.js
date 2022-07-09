@@ -7,6 +7,12 @@ const GameBoard = (() => {
     }
     return gameBoard;
 }
+    const startGame = () => {
+        const playerXScore = document.getElementById('player-x-score')
+        playerXScore.textContent=(`${PlayerX.points}`);
+        document.getElementById('player-o-score').innerHTML=(`${PlayerO.points}`);
+        document.querySelector('#title').removeChild(document.querySelector('.start-button'))
+    }
     const updateBoard = (symbol, index) => {
         gameBoard[index] = symbol;
         let fillBox = document.getElementById(index)
@@ -38,25 +44,52 @@ const GameBoard = (() => {
             return "Tie";
         }
     }
-
-    return {populateBoard, updateBoard, checkForWin};
+    const gameWin = (turn) => {
+        turn.points++;
+        let winner=document.createElement('div');
+        winner.textContent=(`${turn.symbol} Wins!`)
+        winner.className="endgame"
+        document.querySelector('.gameSpace').appendChild(winner);
+        let resetButton=document.createElement('button');
+        resetButton.addEventListener('click', GameBoard.resetGame);
+        resetButton.textContent='New Game'
+        resetButton.className=('resetButton')
+        document.querySelector('.gameSpace').appendChild(resetButton);
+    }
+    const gameTie = () => {
+        let tie = document.createElement('div');
+        tie.textContent=(`Tie Game!`);
+        tie.className="endgame";
+        document.querySelector('.gameSpace').appendChild(tie);
+    }
+    
+    const resetGame = () => {
+        gameBoard=[];
+        let boxes=document.querySelectorAll('.box');
+        boxes.forEach(box => {box.textContent=null});
+        document.querySelector('.gameSpace').removeChild(doument.querySelector('.resetButton'));
+        return gameBoard;
+    }
+    return {startGame, populateBoard, updateBoard, checkForWin, gameWin, gameTie, resetGame};
 })();
 
 const Player = s => {
     const symbol = s;
-    return { symbol };
+    let points = 0;
+    return { symbol, points };
 }
 
 const PlayerX = Player('X');
+
 const PlayerO=Player('O');
 
 const PerformTurn = (() => {
-    let turn=PlayerX.symbol;
+    let turn=PlayerX;
     const updateTurn = (turn) => {
-        if (turn == PlayerX.symbol){
-            return turn=PlayerO.symbol;
-        } else if (turn==PlayerO.symbol){
-            return turn=PlayerX.symbol;
+        if (turn == PlayerX){
+            return turn=PlayerO;
+        } else if (turn==PlayerO){
+            return turn=PlayerX;
         }
     }
     const updateGame = (index) => {
@@ -64,14 +97,16 @@ const PerformTurn = (() => {
             console.log("NO");
             return;
         } else{
-        GameBoard.updateBoard(turn, index);
-        let gameStatus = GameBoard.checkForWin(turn);
+        GameBoard.updateBoard(turn.symbol, index);
+        let gameStatus = GameBoard.checkForWin(turn.symbol);
         if(gameStatus == "Win"){
-            alert(`${turn} Wins!`);
-        }
+            GameBoard.gameWin(turn);
+        } else if(gameStatus == "Tie"){
+            GameBoard.gameTie();
+        } else{
         turn = updateTurn(turn);
         
         }
-    };
+     } };
     return {updateGame};
 })();
