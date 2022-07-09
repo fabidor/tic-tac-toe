@@ -1,4 +1,4 @@
-let gameBoard = [];
+let gameBoard = ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'];
 
 const GameBoard = (() => {
     const populateBoard = () =>{
@@ -8,10 +8,14 @@ const GameBoard = (() => {
     return gameBoard;
 }
     const startGame = () => {
+        gameBoard=[];
+        let boxes=document.querySelectorAll('.box');
+        boxes.forEach(box => {box.textContent=null});
         const playerXScore = document.getElementById('player-x-score')
         playerXScore.textContent=(`${PlayerX.points}`);
         document.getElementById('player-o-score').innerHTML=(`${PlayerO.points}`);
-        document.querySelector('#title').removeChild(document.querySelector('.start-button'))
+        document.querySelector('#title').removeChild(document.querySelector('.start-button'));
+        document.querySelector('.gameSpace').removeChild(document.querySelector('.endgame'));
     }
     const updateBoard = (symbol, index) => {
         gameBoard[index] = symbol;
@@ -51,23 +55,27 @@ const GameBoard = (() => {
         winner.className="endgame"
         document.querySelector('.gameSpace').appendChild(winner);
         let resetButton=document.createElement('button');
-        resetButton.addEventListener('click', GameBoard.resetGame);
+        resetButton.addEventListener('click', GameBoard.startGame);
         resetButton.textContent='New Game'
-        resetButton.className=('resetButton')
-        document.querySelector('.gameSpace').appendChild(resetButton);
+        resetButton.className=('start-button');
+        document.querySelector('#title').appendChild(resetButton);
     }
     const gameTie = () => {
         let tie = document.createElement('div');
         tie.textContent=(`Tie Game!`);
         tie.className="endgame";
         document.querySelector('.gameSpace').appendChild(tie);
+        let resetButton=document.createElement('button');
+        resetButton.addEventListener('click', GameBoard.startGame);
+        resetButton.textContent='New Game'
+        resetButton.className=('start-button');
+        document.querySelector('#title').appendChild(resetButton);
     }
     
     const resetGame = () => {
-        gameBoard=[];
-        let boxes=document.querySelectorAll('.box');
-        boxes.forEach(box => {box.textContent=null});
-        document.querySelector('.gameSpace').removeChild(doument.querySelector('.resetButton'));
+        let gameSpace=document.querySelector('.gameSpace');
+        gameSpace.removeChild(gameSpace.querySelector('.resetButton'));
+        
         return gameBoard;
     }
     return {startGame, populateBoard, updateBoard, checkForWin, gameWin, gameTie, resetGame};

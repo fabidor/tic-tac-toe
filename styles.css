@@ -12,6 +12,10 @@ body{
 #title{
     grid-column: 2/3;
     grid-row: 1/2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .boxBoard{
@@ -21,6 +25,7 @@ body{
     gap: 10px;
     grid-column: 2/3;
     grid-row: 2/3;
+    justify-content: center;
 }
 
 .box{
